@@ -3,7 +3,7 @@ from django.conf import settings
 
 # Create your models here.
 class Vehicle(models.Model):
-    STATUS = (('available','Available'), ('rented','Rented'), ('maintenance','Maintenance'))
+    STATUS = (('available','Available'), ('rented','Rented'), ('pending','Pending'), ('maintenance','Maintenance'))
     plate = models.CharField(max_length=12, unique=True)
     make = models.CharField(max_length=50)
     model = models.CharField(max_length=50, blank=True)

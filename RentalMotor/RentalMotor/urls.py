@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from RentalMotor.views import hello_geeks
+from vehicles.urls import urlpatterns as v_url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', hello_geeks),
+    # path('test', v_url)
 ]
