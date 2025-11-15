@@ -32,8 +32,8 @@
               class="card-img-top"
               alt="{{ vehicle.name }}"
             />
-            {% else %}
-            <img src="{{ MEDIA_URL }}vehicle.jpg" class="card-img-top" />
+            {% else %} {% load static %}
+            <img src="{% static 'images/vehicle.jpg' %}" class="card-img-top" />
             {% endif %}
 
             <div class="card-body">
