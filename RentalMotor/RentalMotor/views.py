@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+# from django.http import HttpResponse
 
-def hello_geeks(request):
-    return HttpResponse("Hello Geeks")
+def unified_image_path(instance, filename):
+    app = instance._meta.app_label
+    return f"{app}/{filename}"

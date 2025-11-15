@@ -1,9 +1,9 @@
 from django.urls import path
 from . import views
 
-# TODO: placeholder only! replace real views
+app_name = "rental"
+
 urlpatterns = [
-    # path('book/', views.BookingCreateView.as_view(), name='rentals:book'),
-    # path('<int:pk>/return/', views.ReturnView.as_view(), name='rentals:return'),
-    # path('<int:pk>/confirm/', views.StaffConfirmView.as_view(), name='rentals:staff_confirm'),
-]
+    path("start/<int:vehicle_id>/", views.start_rental, name="start_rental"),
+    path("deposit/<int:rental_id>/", views.deposit, name="deposit"),
+    path("pending/<int:rental_id>/", views.pending, name="pending"),]
