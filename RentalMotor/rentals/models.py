@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from RentalMotor.vehicles.models import Vehicle
+from vehicles.models import Vehicle
 
 # Create your models here.
 class Booking(models.Model):

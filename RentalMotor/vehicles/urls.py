@@ -3,6 +3,6 @@ from . import views
 
 # TODO: placeholder only! replace real views
 urlpatterns = [
-    # path('', views.VehicleListView.as_view(), name='vehicles:list'),
-    # path('<int:pk>/', views.VehicleDetailView.as_view(), name='vehicles:detail'),
-]
+    path("", views.home, name="home"),
+    path("vehicles/", views.vehicle_list, name="vehicle_list"),
+    path("vehicle/<int:pk>/", views.vehicle_detail, name="vehicle_detail"),]

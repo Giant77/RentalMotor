@@ -10,7 +10,9 @@ class Vehicle(models.Model):
     year = models.PositiveSmallIntegerField(null=True)
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS, default='available')
+    # image = models.ImageField(upload_to="vehicles/", blank=True, null=True)
     notes = models.TextField(blank=True)
     tnc = models.TextField(blank=True)  # terms & conditions
+
 
     def __str__(self): return f"{self.plate} - {self.make} {self.model}"
