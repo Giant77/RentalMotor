@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Vehicle
 
 # Create your views here.
@@ -18,5 +17,5 @@ def vehicle_list(request):
     return render(request, "vehicle_list.html", {"vehicles": queryset})
 
 def vehicle_detail(request, pk):
-    vehicle = Vehicle.objects.get(pk=pk)
+    vehicle = get_object_or_404(Vehicle, pk=pk)
     return render(request, "vehicle_detail.html", {"vehicle": vehicle})
