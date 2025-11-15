@@ -33,12 +33,12 @@ class VehicleAdmin(admin.ModelAdmin):
                 )
             },
         ),
-        # (  TODO: update for images!
-        #     "Media",
-        #     {
-        #         "fields": ("image",),
-        #     },
-        # ),
+        (  #TODO: update for images!
+            "Media",
+            {
+                "fields": ("image",),
+            },
+        ),
         (
             "Detail Tambahan",
             {

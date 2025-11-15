@@ -30,8 +30,8 @@
           <div class="card h-100 shadow-sm">
             {% if v.image %}
             <img src="{{ v.image.url }}" class="card-img-top" />
-            {% else %}
-            <img src="/static/default_motor.jpg" class="card-img-top" />
+            {% else %} {% load static %}
+            <img src="{% static 'images/vehicle.jpg' %}" class="card-img-top" />
             {% endif %}
 
             <div class="card-body">

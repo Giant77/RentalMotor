@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from RentalMotor.views import unified_image_path
 
 # Create your models here.
 class Vehicle(models.Model):
@@ -11,7 +12,7 @@ class Vehicle(models.Model):
     price_per_day = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS, default='available')
     # TODO: Update for images!
-    # image = models.ImageField(upload_to="vehicles/", blank=True, null=True)
+    image = models.ImageField(upload_to=unified_image_path, blank=True, null=True)
     notes = models.TextField(blank=True)
     tnc = models.TextField(blank=True)  # terms & conditions
 
