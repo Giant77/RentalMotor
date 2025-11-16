@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from vehicles.models import Vehicle
-from .models import Rental
-from datetime import datetime
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.conf import settings
+from .decorator.services_decorator import BaseRental, HelmetAddon, JacketAddon
+from .models import Rental
+from vehicles.models import Vehicle
 
-# Create your views here.
+
 def start_rental(request, vehicle_id):
     vehicle = get_object_or_404(Vehicle, id=vehicle_id)
 
@@ -15,7 +15,7 @@ def start_rental(request, vehicle_id):
         end = request.POST.get("end_date")
         addons = request.POST.getlist("addons")
 
-        r = Rental.objects.create(
+        rental = Rental.objects.create(
             user=request.user,
             vehicle=vehicle,
             start_date=start,
@@ -24,32 +24,69 @@ def start_rental(request, vehicle_id):
             status="awaiting_deposit"
         )
 
-        return redirect("rental:deposit", r.id)
+        return redirect("rental:deposit", rental.id)
 
     return render(request, "rentals/rental_start.html", {"vehicle": vehicle})
 
 def deposit(request, rental_id):
     rental = get_object_or_404(Rental, id=rental_id)
 
+    # calculate charges
+    base_price = rental.vehicle.price_per_day
+    start = rental.start_date
+    end = rental.end_date
+    days = (end - start).days or 1
+
+    rental_cost = base_price * days
+    decorated = BaseRental(rental_cost)
+
+    addons_selected = rental.addons.get("selected", [])
+
+    if "helmet" in addons_selected:
+        decorated = HelmetAddon(decorated, 50000)
+    if "jacket" in addons_selected:
+        decorated = JacketAddon(decorated, 75000)
+
+    total = decorated.cost()
+
+    context = {
+        "rental": rental,
+        "days": days,
+        "base_total": rental_cost,
+        "addons_total": total - rental_cost,
+        "grand_total": total,
+    }
+
     if request.method == "POST":
-        rental.deposit_amount = request.POST.get("deposit")
-        rental.sim_image = request.FILES.get("sim")
+
+        deposit_amount = request.POST.get("deposit")
+        sim_file = request.FILES.get("sim")
+
+        if not deposit_amount or not sim_file:
+            context["error"] = "Deposit dan upload SIM wajib."
+            return render(request, "rentals/deposit_upload.html", context)
+
+        # save
+        rental.deposit_amount = deposit_amount
+        rental.sim_image = sim_file
         rental.status = "awaiting_verification"
         rental.save()
 
-                # Notify all admins via email
-        admins = User.objects.filter(is_superuser=True).values_list("email", flat=True)
-        send_mail(
-            subject="Rental Pending Verification",
-            message=f"Rental ID {rental.id} from {rental.user.username} is awaiting verification.",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=list(admins),
-            fail_silently=True,
-        )
+        # # send email AFTER success
+        # admins = User.objects.filter(is_superuser=True).values_list("email", flat=True)
+        # send_mail(
+        #     subject="Rental Pending Verification",
+        #     message=f"Rental ID {rental.id} dari {rental.user.username} menunggu verifikasi.",
+        #     from_email=settings.DEFAULT_FROM_EMAIL,
+        #     recipient_list=list(admins),
+        #     fail_silently=True,
+        # )
 
-        return redirect("rentals/rental:pending", rental.id)
+        return redirect("rental:pending", rental.id)
 
-    return render(request, "rentals/deposit_upload.html", {"rental": rental})
+    # GET request → render page
+    return render(request, "rentals/deposit_upload.html", context)
+
 
 def pending(request, rental_id):
     rental = get_object_or_404(Rental, id=rental_id)

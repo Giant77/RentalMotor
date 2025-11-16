@@ -1,5 +1,5 @@
 from decimal import Decimal
-from strategies import PricingStrategy, DailyStrategy
+from ..strategies import PricingStrategy, DailyStrategy
 
 class RentalCost:
     def cost(self) -> Decimal:

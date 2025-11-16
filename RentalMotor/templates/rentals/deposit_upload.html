@@ -1,0 +1,101 @@
+{% extends "base/base.html" %} {% block title %}Pembayaran Deposit{% endblock %}
+<!-- prettier-ignore -->
+{% block content %}
+
+<h2 class="fw-bold mb-4">Pembayaran Deposit</h2>
+
+<div class="card shadow-sm p-4">
+  <h5 class="fw-bold mb-3">Ringkasan Biaya</h5>
+
+  <p>Durasi: <strong>{{ days }} hari</strong></p>
+  <p>Biaya Dasar: <strong>Rp {{ base_total }}</strong></p>
+  <p>
+    Add-ons: {% if addons_total > 0 %}
+    <strong>Rp {{ addons_total }}</strong>
+    {% else %}
+    <strong>Tidak ada</strong>
+    {% endif %}
+  </p>
+
+  <hr />
+
+  <h4>Total: <strong>Rp {{ grand_total }}</strong></h4>
+
+  {% if error %}
+  <div class="alert alert-danger mt-3">{{ error }}</div>
+  {% endif %}
+
+  <div class="alert alert-warning mt-3">
+    Kerusakan akibat penggunaan tidak wajar akan dikenakan biaya tambahan.
+  </div>
+
+  <form id="depositForm" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label class="form-label">Jumlah Deposit</label>
+      <input
+        type="number"
+        class="form-control"
+        name="deposit"
+        required
+        value="{{ grand_total }}"
+        min="1"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Upload Foto SIM</label>
+      <input type="file" class="form-control" name="sim" required />
+    </div>
+
+    <button type="button" id="triggerModal" class="btn btn-primary w-100">
+      Bayar Deposit
+    </button>
+  </form>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-4">
+      <h5 class="fw-bold">Konfirmasi Pembayaran</h5>
+
+      <p class="mt-2">Total yang harus dibayar:</p>
+      <h3 class="fw-bold">Rp {{ grand_total }}</h3>
+
+      <p class="text-danger mt-3">
+        Kerusakan non-usage normal akan dikenakan biaya tambahan.
+      </p>
+
+      <div class="d-flex justify-content-end mt-4">
+        <button class="btn btn-secondary me-2" data-bs-dismiss="modal">
+          Batal
+        </button>
+        <button class="btn btn-primary" id="submitFormBtn">
+          Konfirmasi Pembayaran
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const trigger = document.getElementById("triggerModal");
+    const submitBtn = document.getElementById("submitFormBtn");
+    const form = document.getElementById("depositForm");
+    const modalEl = document.getElementById("confirmModal");
+    const modal = new bootstrap.Modal(modalEl);
+
+    trigger.addEventListener("click", () => {
+      modal.show();
+    });
+
+    submitBtn.addEventListener("click", () => {
+      form.submit();
+    });
+  });
+</script>
+
+{% endblock %}
