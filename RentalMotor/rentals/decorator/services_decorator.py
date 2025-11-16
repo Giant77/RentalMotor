@@ -24,13 +24,13 @@ class HelmetAddon(RentalDecorator):
     def cost(self):
         return self._rental.cost() + self.helmet_price
 
-# Add-on: GPS
-class GPSAddon(RentalDecorator):
-    def __init__(self, rental, gps_price: Decimal):
+# Add-on: Jacket
+class JacketAddon(RentalDecorator):
+    def __init__(self, rental, jacket_price: Decimal):
         super().__init__(rental)
-        self.gps_price = gps_price
+        self.jacket_price = jacket_price
     def cost(self):
-        return self._rental.cost() + self.gps_price
+        return self._rental.cost() + self.jacket_price
 
 # Fine decorator for damage
 class DamageFineDecorator(RentalDecorator):

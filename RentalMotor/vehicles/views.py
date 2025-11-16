@@ -4,7 +4,7 @@ from .models import Vehicle
 # Create your views here.
 def home(request):
     vehicles = Vehicle.objects.all()
-    return render(request, "home.html", {"vehicles": vehicles})
+    return render(request, "home/home.html", {"vehicles": vehicles})
 
 
 def vehicle_list(request):
@@ -14,8 +14,8 @@ def vehicle_list(request):
     if vtype:
         queryset = queryset.filter(type__icontains=vtype)
 
-    return render(request, "vehicle_list.html", {"vehicles": queryset})
+    return render(request, "vehicles/vehicle_list.html", {"vehicles": queryset})
 
 def vehicle_detail(request, pk):
     vehicle = get_object_or_404(Vehicle, pk=pk)
-    return render(request, "vehicle_detail.html", {"vehicle": vehicle})
+    return render(request, "vehicles/vehicle_detail.html", {"vehicle": vehicle})

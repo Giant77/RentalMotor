@@ -16,6 +16,7 @@
 
       <p>Kendaraan: {{ rental.vehicle.make }} {{ rental.vehicle.model }}</p>
       <p>Plat: {{ rental.vehicle.plate }}</p>
+      <p>Biaya total: {{ rental.vehicle.price_per_day }}</p>
 
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}

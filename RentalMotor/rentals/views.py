@@ -26,7 +26,7 @@ def start_rental(request, vehicle_id):
 
         return redirect("rental:deposit", r.id)
 
-    return render(request, "rental_start.html", {"vehicle": vehicle})
+    return render(request, "rentals/rental_start.html", {"vehicle": vehicle})
 
 def deposit(request, rental_id):
     rental = get_object_or_404(Rental, id=rental_id)
@@ -47,10 +47,10 @@ def deposit(request, rental_id):
             fail_silently=True,
         )
 
-        return redirect("rental:pending", rental.id)
+        return redirect("rentals/rental:pending", rental.id)
 
-    return render(request, "deposit_upload.html", {"rental": rental})
+    return render(request, "rentals/deposit_upload.html", {"rental": rental})
 
 def pending(request, rental_id):
     rental = get_object_or_404(Rental, id=rental_id)
-    return render(request, "pending.html", {"rental": rental})
+    return render(request, "rentals/pending.html", {"rental": rental})

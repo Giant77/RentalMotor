@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Rental Motor{% endblock %}</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+  </head>
+
+  <body>
+    <header class="bg-dark text-white py-3 mb-4">
+      <div class="container d-flex justify-content-between align-items-center">
+        <div>
+          <a
+            href="{% url 'home' %}"
+            class="text-white fs-4 text-decoration-none"
+          >
+            RentalMotor
+          </a>
+        </div>
+
+        <nav>
+          <a
+            href="{% url 'vehicle_list' %}"
+            class="text-white me-3 text-decoration-none"
+          >
+            Kendaraan
+          </a>
+
+          {% if user.is_authenticated %}
+          <span class="text-white me-3">{{ user.username }}</span>
+          <form method="POST" action="{% url 'logout' %}" class="d-inline">
+            {% csrf_token %}
+            <button class="btn btn-outline-light btn-sm" type="submit">
+              Logout
+            </button>
+          </form>
+          {% else %}
+          <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm"
+            >Login</a
+          >
+          <a href="{% url 'signup' %}" class="btn btn-outline-light btn-sm"
+            >Daftar</a
+          >
+          {% endif %}
+        </nav>
+      </div>
+    </header>
+
+    <main class="container pb-5">{% block content %}{% endblock %}</main>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "base/base.html" %} {% block title %}Beranda{% endblock %}
+
+<!-- prettier-ignore -->
+{% block content%}
+
+<h2 class="mb-4">Tersedia Hari Ini</h2>
+
+<div class="row g-4">
+  {% for vehicle in vehicles|slice:":3" %}
+  <div class="col-md-4">
+    <div class="card shadow-sm h-100">
+      {% if vehicle.image %}
+      <img src="{{ vehicle.image.url }}" class="card-img-top" />
+
+      {% else %} {% load static %}
+      <img src="{% static 'images/vehicle.jpg' %}" class="card-img-top" />
+      {% endif %}
+
+      <div class="card-body">
+        <h5>{{ vehicle.make }} {{ vehicle.model }}</h5>
+        <p class="text-muted">{{ vehicle.plate }}</p>
+        <a
+          href="{% url 'vehicle_detail' vehicle.id %}"
+          class="btn btn-outline-dark"
+          >Detail</a
+        >
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="text-center mt-5">
+  <a href="{% url 'vehicle_list' %}" class="btn btn-secondary btn-lg"
+    >Lihat Semua Motor</a
+  >
+</div>
+
+{% endblock %}

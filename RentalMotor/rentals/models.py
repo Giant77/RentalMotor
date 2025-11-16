@@ -23,7 +23,7 @@ class Rental(models.Model):
     sim_image = models.ImageField(upload_to=unified_image_path, null=True, blank=True) # TODO: images
     status = models.CharField(max_length=30, choices=STATUS, default="pending")
     
-    admin_reason = models.TextField(blank=True)  # admin approval comment
+    admin_reason = models.TextField(blank=True)
     reviewed_by = models.ForeignKey(
         User,
         null=True,
@@ -35,7 +35,7 @@ class Rental(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 # class Transaction(models.Model):
-#     booking = models.OneToOneField(Booking, on_delete=models.CASCADE)
+#     booking = models.OneToOneField(Rental, on_delete=models.CASCADE)
 #     total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 #     fines = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 #     finalized = models.BooleanField(default=False)
