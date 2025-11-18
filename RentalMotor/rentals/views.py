@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.conf import settings
 from .decorator.services_decorator import BaseRental, HelmetAddon, JacketAddon
 from .models import Rental
 from vehicles.models import Vehicle
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 
 
 def start_rental(request, vehicle_id):
@@ -72,16 +73,6 @@ def deposit(request, rental_id):
         rental.status = "awaiting_verification"
         rental.save()
 
-        # # send email AFTER success
-        # admins = User.objects.filter(is_superuser=True).values_list("email", flat=True)
-        # send_mail(
-        #     subject="Rental Pending Verification",
-        #     message=f"Rental ID {rental.id} dari {rental.user.username} menunggu verifikasi.",
-        #     from_email=settings.DEFAULT_FROM_EMAIL,
-        #     recipient_list=list(admins),
-        #     fail_silently=True,
-        # )
-
         return redirect("rental:pending", rental.id)
 
     # GET request → render page
@@ -91,3 +82,13 @@ def deposit(request, rental_id):
 def pending(request, rental_id):
     rental = get_object_or_404(Rental, id=rental_id)
     return render(request, "rentals/pending.html", {"rental": rental})
+
+@staff_member_required
+def admin_transactions(request):
+    rentals = Rental.objects.all().order_by("-id")
+    return render(request, "rentals/admin_transactions.html", {"rentals": rentals})
+
+@login_required
+def user_transactions(request):
+    rentals = Rental.objects.filter(user=request.user).order_by("-id")
+    return render(request, "rentals/user_transactions.html", {"rentals": rentals})

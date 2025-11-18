@@ -8,7 +8,40 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      if (window.user_is_authenticated) {
+        const socket = new WebSocket(
+          "ws://" + window.location.host + "/ws/notifications/"
+        );
+
+        socket.onmessage = function (e) {
+          const data = JSON.parse(e.data);
+
+          const countEl = document.querySelector("#notif-count");
+          if (countEl) {
+            countEl.innerText = parseInt(countEl.innerText || 0) + 1;
+          }
+        };
+      }
+
+      function markNotificationsRead() {
+        fetch("/notifications/mark-read/").then(() => {
+          const badge = document.getElementById("notif-count");
+          if (badge) badge.remove();
+        });
+      }
+
+      function deleteNotification(id) {
+        fetch(`/notifications/delete/${id}/`).then(() => {
+          location.reload();
+        });
+      }
+    </script>
   </head>
 
   <body>
@@ -23,30 +56,112 @@
           </a>
         </div>
 
-        <nav>
-          <a
-            href="{% url 'vehicle_list' %}"
-            class="text-white me-3 text-decoration-none"
-          >
-            Kendaraan
-          </a>
+        <!-- Navs -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+          <!-- Left side -->
+          <a href="{% url 'vehicle_list' %}" class="navbar-brand">Kendaraan</a>
 
-          {% if user.is_authenticated %}
-          <span class="text-white me-3">{{ user.username }}</span>
-          <form method="POST" action="{% url 'logout' %}" class="d-inline">
-            {% csrf_token %}
-            <button class="btn btn-outline-light btn-sm" type="submit">
-              Logout
-            </button>
-          </form>
-          {% else %}
-          <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm"
-            >Login</a
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNav"
           >
-          <a href="{% url 'signup' %}" class="btn btn-outline-light btn-sm"
-            >Daftar</a
-          >
-          {% endif %}
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Notifications -->
+          <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto">
+              {% if user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link position-relative"
+                  href="#"
+                  id="notifDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  onclick="markNotificationsRead()"
+                >
+                  <i class="bi bi-bell-fill"></i>
+
+                  {% if notif_unread > 0 %}
+                  <span
+                    id="notif-count"
+                    class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+                  >
+                    {{ notif_unread }}
+                  </span>
+                  {% endif %}
+                </a>
+
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  style="min-width: 350px"
+                >
+                  {% for n in notifications %}
+                  <li
+                    class="dropdown-item d-flex justify-content-between align-items-start"
+                  >
+                    <span>{{ n.message }}</span>
+
+                    <button
+                      class="btn btn-sm text-danger"
+                      onclick="deleteNotification({{ n.id }})"
+                    >
+                      <i class="bi bi-x-circle"></i>
+                    </button>
+                  </li>
+                  {% empty %}
+                  <li class="dropdown-item text-muted">Tidak ada notifikasi</li>
+                  {% endfor %}
+
+                  <li><hr class="dropdown-divider" /></li>
+
+                  <li>
+                    <a
+                      href="{% url 'notifications:list' %}"
+                      class="dropdown-item text-center"
+                    >
+                      Lihat Semua
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              {% endif %} {% if user.is_superuser %}
+              <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'admin:index' %}"
+                  >Admin Panel</a
+                >
+              </li>
+              {% endif %}
+
+              <!-- Auth section -->
+              {% if user.is_authenticated %}
+              <li class="nav-item">
+                <span class="nav-link text-white">{{ user.username }}</span>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'logout' %}"
+                  >Logout</a
+                >
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'login' %}"
+                  >Login</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'signup' %}"
+                  >Signup</a
+                >
+              </li>
+              {% endif %}
+            </ul>
+          </div>
         </nav>
       </div>
     </header>

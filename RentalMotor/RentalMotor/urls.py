@@ -24,7 +24,7 @@ urlpatterns = [
     path('', include('vehicles.urls')),
     path('', include('accounts.urls')),  
     path('', include('rentals.urls')),  
-    # path('', include('payments.urls')),  
+    path("notifications/", include(("notifications.urls", "notifications"), namespace="notifications")),
     ]
 
 if settings.DEBUG:

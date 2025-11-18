@@ -69,12 +69,22 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "notifications.context_processors.user_notifications",
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'RentalMotor.wsgi.application'
+
+ASGI_APPLICATION = "RentalMotor.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [("127.0.0.1", 6379)]},
+    }
+}
 
 
 # Database
