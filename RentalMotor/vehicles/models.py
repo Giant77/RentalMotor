@@ -1,10 +1,11 @@
 from django.db import models
 from django.conf import settings
 from RentalMotor.views import unified_image_path
+from .states.factory import get_state
 
 # Create your models here.
 class Vehicle(models.Model):
-    STATUS = (('available','Available'), ('rented','Rented'), ('pending','Pending'), ('maintenance','Maintenance'))
+    STATUS = (('available','Available'), ('rented','Rented'), ('maintenance','Maintenance'))
     plate = models.CharField(max_length=12, unique=True)
     make = models.CharField(max_length=50)
     model = models.CharField(max_length=50, blank=True)
@@ -17,3 +18,13 @@ class Vehicle(models.Model):
 
 
     def __str__(self): return f"{self.plate} - {self.make} {self.model}"
+ 
+    @property
+    def state(self):
+        return get_state(self.status)
+
+    def available(self):
+        self.state.available(self)
+
+    def maintenance(self):
+        self.state.maintenance(self)

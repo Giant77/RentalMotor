@@ -44,7 +44,8 @@ class RentalAdmin(admin.ModelAdmin):
         for obj in queryset:
             obj.reviewed_by = request.user
             obj.admin_reason = obj.admin_reason or "Approved"
-            obj.approve()         # State pattern call
+            obj.approve()
+        
         self.message_user(request, "Selected rentals approved.")
     approve_rental.short_description = "Approve selected rentals"
 
