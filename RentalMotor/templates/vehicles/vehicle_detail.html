@@ -25,12 +25,20 @@
     <p class="text-muted">Status: {{ vehicle.status }}</p>
     <h4>Rp {{ vehicle.price_per_day }} / hari</h4>
 
-    <a
-      href="{% url 'rental:start_rental' vehicle.id %}"
-      class="btn btn-primary mt-4"
+    {% if vehicle.status == "available" %}
+    <a href="{% url 'rental:start_rental' vehicle.id %}" class="btn btn-primary"
+      >Sewa Sekarang</a
     >
-      Sewa Sekarang
-    </a>
+    {% else %}
+    <button
+      class="btn btn-secondary"
+      disabled
+      data-bs-toggle="tooltip"
+      title="Kendaraan tidak tersedia ({{ vehicle.status }})"
+    >
+      Tidak Tersedia
+    </button>
+    {% endif %}
   </div>
 </div>
 

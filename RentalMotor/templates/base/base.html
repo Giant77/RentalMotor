@@ -41,6 +41,13 @@
           location.reload();
         });
       }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        tooltipTriggerList.map((t) => new bootstrap.Tooltip(t));
+      });
     </script>
   </head>
 
