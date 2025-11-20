@@ -34,7 +34,7 @@ The project demonstrates:
 - Add-ons implemented using a **Decorator pattern**.
 - Deposit upload and validation.
 - Approval and rejection through Django admin.
-- Rental state transitions through **State Design Pattern**.
+- Rental state transitions through **State & Factory Design Pattern**.
 - User-visible and admin-visible transaction pages.
 
 ### Notification System
