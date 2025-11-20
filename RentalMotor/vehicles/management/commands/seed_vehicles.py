@@ -35,7 +35,7 @@ class Command(BaseCommand):
             },
             {
                 "plate": "BK1122CC",
-                "make": "Suzuki",
+                "make": "Honda",
                 "model": "Beat Street",
                 "year": 2021,
                 "price_per_day": Decimal("60000"),
