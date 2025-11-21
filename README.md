@@ -13,6 +13,8 @@ The project demonstrates:
 - **Template-based navigation** and restricted UI behavior
 - **Safe rental availability enforcement**
 
+Or you can check the test deployment [here](https://gi4nt.pythonanywhere.com/).
+
 <!-- _This repository is intended as a structural prototype, not a full production deployment._ -->
 
 ---
